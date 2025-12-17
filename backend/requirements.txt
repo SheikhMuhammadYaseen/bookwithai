@@ -1,0 +1,14 @@
+fastapi==0.110.0
+uvicorn[standard]==0.22.0
+python-dotenv==0.21.0
+google-generativeai
+qdrant-client==1.7.3
+langchain==0.1.9
+tenacity==8.2.3
+sqlalchemy
+pydantic
+psycopg2-binary
+beautifulsoup4==4.12.3
+unstructured[md]
+next
+cohere

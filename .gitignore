@@ -1,0 +1,50 @@
+# =========================
+# Environment variables
+# =========================
+
+# Exact .env file (project root)
+.env
+
+# Explicit relative path (same file, extra safety)
+bookwithai/.env
+
+# =========================
+# Node / Python / Common
+# =========================
+node_modules/
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# =========================
+# Build folders
+# =========================
+dist/
+build/
+out/
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# OS files
+# =========================
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Temp files
+# =========================
+*.tmp
+*.swp
