@@ -18,4 +18,8 @@ const InteractiveButtons = () => {
   );
 };
 
+<<<<<<< HEAD
 export default InteractiveButtons;
+=======
+export default InteractiveButtons;
+>>>>>>> e25e880e08042cc52ec0e5c6e265e2e07042e8ac

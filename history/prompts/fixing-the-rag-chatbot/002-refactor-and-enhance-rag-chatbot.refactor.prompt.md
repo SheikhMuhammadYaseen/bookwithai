@@ -2,7 +2,11 @@
 id: "002"
 title: "Refactor and Enhance RAG Chatbot"
 stage: "refactor"
+<<<<<<< HEAD
 date_iso: "2025-12-08"
+=======
+date_iso: "2025-12-06"
+>>>>>>> e25e880e08042cc52ec0e5c6e265e2e07042e8ac
 surface: "agent"
 model: "gemini-1.5-pro"
 feature: "fixing-the-rag-chatbot"
@@ -51,6 +55,7 @@ I have completed the requested fixes and enhancements to your RAG chatbot. The `
     *   `backend/app/services.py`: Updated to include the subagent router and robust error handling.
 
 This approach ensures that all your existing functionality remains intact while adding a powerful new layer for handling specialized queries.
+<<<<<<< HEAD
 
 ## Outcome
 
@@ -63,3 +68,5 @@ This approach ensures that all your existing functionality remains intact while 
 
 - **Constraint:** The current execution environment lacked necessary `docker` and `docker-compose` binaries for runtime testing.
 - **Resolution:** Provided optimized, production-ready configuration files and deployment scripts to ensure a seamless manual transition to a containerized environment.
+=======
+>>>>>>> e25e880e08042cc52ec0e5c6e265e2e07042e8ac

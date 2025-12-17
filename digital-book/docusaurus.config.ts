@@ -82,6 +82,7 @@ const config: Config = {
       },
       items: [
         
+<<<<<<< HEAD
         {
           to: '/signup',
           position: 'right',
@@ -92,6 +93,11 @@ const config: Config = {
           position: 'right',
           label: 'Sign In',
         },
+=======
+
+        
+
+>>>>>>> e25e880e08042cc52ec0e5c6e265e2e07042e8ac
         
 
       ],

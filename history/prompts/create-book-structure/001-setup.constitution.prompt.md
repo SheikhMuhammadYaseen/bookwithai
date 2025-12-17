@@ -52,4 +52,8 @@ Graders run and results (PASS/FAIL): N/A
 
 Prompt variant (if applicable): N/A
 
+<<<<<<< HEAD
 Next experiment (smallest change to try): N/A
+=======
+Next experiment (smallest change to try): N/A
+>>>>>>> e25e880e08042cc52ec0e5c6e265e2e07042e8ac

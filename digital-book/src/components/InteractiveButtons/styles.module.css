@@ -6,7 +6,11 @@
 }
 
 .interactiveButton {
+<<<<<<< HEAD
   background-color: #6a0dad;
+=======
+  background-color: #6a0dad; /* A nice purple */
+>>>>>>> e25e880e08042cc52ec0e5c6e265e2e07042e8ac
   color: white;
   border: none;
   border-radius: 5px;
@@ -17,5 +21,10 @@
 }
 
 .interactiveButton:hover {
+<<<<<<< HEAD
   background-color: #7b2eec;
 }
+=======
+  background-color: #7b2eec; /* Lighter purple on hover */
+}
+>>>>>>> e25e880e08042cc52ec0e5c6e265e2e07042e8ac
