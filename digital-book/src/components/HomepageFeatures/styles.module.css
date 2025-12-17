@@ -1,7 +1,6 @@
 .features {
   display: flex;
   align-items: center;
-<<<<<<< HEAD
   padding: 4rem 0;
   width: 100%;
   background-color: var(--ifm-background-color);
@@ -48,13 +47,3 @@
     padding: 3rem 0;
   }
 }
-=======
-  padding: 2rem 0;
-  width: 100%;
-}
-
-.featureSvg {
-  height: 200px;
-  width: 200px;
-}
->>>>>>> e25e880e08042cc52ec0e5c6e265e2e07042e8ac

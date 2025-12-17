@@ -2,12 +2,8 @@
   // This file is not used in compilation. It is here just for a nice editor experience.
   "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-<<<<<<< HEAD
     "baseUrl": ".",
     "ignoreDeprecations": "6.0"
-=======
-    "baseUrl": "."
->>>>>>> e25e880e08042cc52ec0e5c6e265e2e07042e8ac
   },
   "exclude": [".docusaurus", "build"]
 }
