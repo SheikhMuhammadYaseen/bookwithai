@@ -61,7 +61,7 @@ const Chatbot = () => {
     setSelectedText('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/chat', {
+      const response = await fetch('https://ys5555-aibook-backend.hf.space/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message, context }),
