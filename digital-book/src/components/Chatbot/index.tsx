@@ -1,33 +1,129 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './styles.module.css';
 
+const CHAT_STORAGE_KEY = 'chatbot_history';
+
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [hasInitialSelectionMessage, setHasInitialSelectionMessage] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    const savedChat = localStorage.getItem(CHAT_STORAGE_KEY);
+    if (savedChat) {
+      try {
+        const parsed = JSON.parse(savedChat);
+        setMessages(parsed);
+      } catch (err) {
+        console.error('Failed to load chat history:', err);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+    }
+  }, [messages]);
+
   const handleSelection = () => {
     const text = window.getSelection()?.toString().trim();
-    if (text) {
-      setSelectedText(text);
-      setIsOpen(true);
+    if (!text || text === selectedText) return;
 
-      if (!hasInitialSelectionMessage) {
-        const initialMessage = `Tell me more about: "${text}"`;
-        setMessages([{ role: 'user', content: initialMessage }]);
-        setHasInitialSelectionMessage(true);
-      }
+    setSelectedText(text);
+    setIsOpen(true);
+
+    const userMessage = `Tell me more about: "${text}"`;
+    setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
+
+    sendMessageWithText(userMessage, text);
+  };
+
+  const sendMessageWithText = async (userMessage: string, context: string) => {
+    setMessages((prev) => [...prev, { role: 'assistant', content: 'thinking' }]);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('https://ys5555-aibook-backend.hf.space/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage, context }),
+      });
+
+      if (!response.ok) throw new Error('API request failed');
+
+      const data = await response.json();
+
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = { role: 'assistant', content: data.response };
+        return newMessages;
+      });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = {
+          role: 'assistant',
+          content: "Sorry, I'm having trouble connecting.",
+        };
+        return newMessages;
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMessage = input.trim();
+    setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
+    setInput('');
+
+    setMessages((prev) => [...prev, { role: 'assistant', content: 'thinking' }]);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('https://ys5555-aibook-backend.hf.space/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage, context: selectedText }),
+      });
+
+      if (!response.ok) throw new Error('API request failed');
+
+      const data = await response.json();
+
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = { role: 'assistant', content: data.response };
+        return newMessages;
+      });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = {
+          role: 'assistant',
+          content: "Sorry, I'm having trouble connecting.",
+        };
+        return newMessages;
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -36,53 +132,11 @@ const Chatbot = () => {
     return () => {
       document.removeEventListener('mouseup', handleSelection);
     };
-  }, [hasInitialSelectionMessage]);
+  }, [selectedText]);
 
-  const sendMessage = async () => {
-    if (!input.trim() && !selectedText.trim()) return;
-
-    let message: string;
-    let context: string = selectedText;
-
-    if (input.trim()) {
-      message = input;
-    } else {
-      message = messages.find(m => m.role === 'user')?.content || `Tell me more about: "${selectedText}"`;
-    }
-
-    if (input.trim()) {
-      setMessages(prev => [...prev, { role: 'user', content: message }]);
-    }
-
-    setMessages(prev => [...prev, { role: 'assistant', content: 'thinking' }]);
-    setIsLoading(true);
-
-    setInput('');
-    setSelectedText('');
-
-    try {
-      const response = await fetch('https://ys5555-aibook-backend.hf.space/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, context }),
-      });
-      const data = await response.json();
-
-      setMessages(prev => {
-        const newMessages = [...prev];
-        newMessages[newMessages.length - 1] = { role: 'assistant', content: data.response };
-        return newMessages;
-      });
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setMessages(prev => {
-        const newMessages = [...prev];
-        newMessages[newMessages.length - 1] = { role: 'assistant', content: "Sorry, I'm having trouble connecting." };
-        return newMessages;
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const clearChat = () => {
+    setMessages([]);
+    localStorage.removeItem(CHAT_STORAGE_KEY);
   };
 
   return (
@@ -95,7 +149,11 @@ const Chatbot = () => {
               ×
             </button>
           </div>
+
           <div className={styles.chatMessages}>
+            {messages.length === 0 && (
+              <div className={styles.emptyMessage}>Need assistance? I’m here.</div>
+            )}
             {messages.map((msg, index) => (
               <div key={index} className={`${styles.chatMessage} ${styles[msg.role]}`}>
                 {msg.content === 'thinking' ? (
@@ -112,6 +170,7 @@ const Chatbot = () => {
             ))}
             <div ref={messagesEndRef} />
           </div>
+
           <div className={styles.chatInput}>
             <textarea
               value={input}
@@ -125,13 +184,26 @@ const Chatbot = () => {
               }}
               rows={3}
             />
-            <button onClick={sendMessage} disabled={isLoading}>
-              Send
-            </button>
+
+            <div className={styles.buttonGroup}>
+              <button
+                className={styles.clearButton}
+                onClick={clearChat}
+                disabled={isLoading || messages.length === 0}
+              >
+                Clear
+              </button>
+              <button
+                onClick={sendMessage}
+                disabled={isLoading || !input.trim()}
+              >
+                Send
+              </button>
+            </div>
           </div>
         </div>
       )}
-      {/* Chat button with full-logo */}
+
       <button className={styles.chatButton} onClick={() => setIsOpen(!isOpen)} />
     </div>
   );
