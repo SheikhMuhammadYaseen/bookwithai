@@ -137,8 +137,13 @@
   font-size: 0.95em;
 }
 
+.chatInput .buttonGroup {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
 .chatInput button {
-  align-self: flex-end;
   padding: 10px 20px;
   background-color: var(--ifm-color-primary);
   color: white;
@@ -146,9 +151,24 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
+  min-width: 80px;
 }
 
 .chatInput button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.chatInput .clearButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.chatInput .clearButton:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.chatInput .clearButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
