@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
 
-const AUTH_API_URL = 'http://localhost:3001/api/auth';
-const ERROR_API_URL = 'http://localhost:8000';
+const AUTH_API_URL = 'https://ys5555-au-aibook.hf.space/api/auth';
+const ERROR_API_URL = 'https://ys5555-au-aibook.hf.space';
 
 const logError = async (error: Error) => {
   try {
