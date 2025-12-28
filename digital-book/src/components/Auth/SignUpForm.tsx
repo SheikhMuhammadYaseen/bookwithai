@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
 
-const AUTH_API_URL = 'http://localhost:3001/api/auth';
+const AUTH_API_URL = 'https://ys5555-au-aibook.hf.space/api/auth';
 
 const roles = ['Student', 'Professional', 'Hobbyist', 'Researcher', 'Other'];
 const programmingLanguages = ['Python', 'C++', 'JavaScript', 'None', 'Other'];
 const skillLevels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
 
 const SignUpForm = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [currentRole, setCurrentRole] = useState('');
@@ -38,9 +39,10 @@ const SignUpForm = () => {
 
     try {
       const payload = {
+        name,
         email,
         password,
-        role: currentRole || null,
+        role: currentRole || undefined,
         languages: JSON.stringify(languages),
         languageSkills: JSON.stringify(languageSkills),
       };
@@ -55,14 +57,13 @@ const SignUpForm = () => {
       const text = await res.text();
 
       if (!res.ok) {
-        alert(`Sign up failed: ${text || 'Unknown error'}`);
-        setLoading(false);
+        alert(`Sign up failed: ${text}`);
         return;
       }
 
       alert('✅ Sign up successful!');
       window.location.href = '/';
-    } catch (error: any) {
+    } catch (error) {
       alert('❌ Network error – Server not responding');
     } finally {
       setLoading(false);
@@ -76,6 +77,18 @@ const SignUpForm = () => {
         <p className={styles.subtitle}>
           Join our community of learners and innovators in Physical AI & Humanoid Robotics
         </p>
+
+        <div className={styles.inputGroup}>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            disabled={loading}
+            placeholder=" "
+          />
+          <label>Full Name</label>
+        </div>
 
         <div className={styles.inputGroup}>
           <input
@@ -106,11 +119,8 @@ const SignUpForm = () => {
             value={currentRole}
             onChange={(e) => setCurrentRole(e.target.value)}
             disabled={loading}
-            required={false}
           >
-            <option value="" disabled>
-              Select a role (optional)
-            </option>
+            <option value="">Select a role (optional)</option>
             {roles.map((role) => (
               <option key={role} value={role}>
                 {role}
@@ -123,6 +133,7 @@ const SignUpForm = () => {
         <label style={{ marginBottom: '0.5rem', fontWeight: 600 }}>
           Programming Languages You Know:
         </label>
+
         <div className={styles.checkboxGroup}>
           {programmingLanguages.map((lang) => (
             <label key={lang} className={styles.checkboxLabel}>
@@ -145,9 +156,7 @@ const SignUpForm = () => {
                 onChange={(e) => handleSkillLevelChange(lang, e.target.value)}
                 disabled={loading}
               >
-                <option value="" disabled>
-                  Select skill level
-                </option>
+                <option value="">Select skill level</option>
                 {skillLevels.map((level) => (
                   <option key={level} value={level}>
                     {level}
